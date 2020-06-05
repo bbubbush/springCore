@@ -1,21 +1,26 @@
 package com.bbubbush.demo;
 
 import com.bbubbush.demo.logic.controller.DemoController;
+import com.bbubbush.demo.logic.domain.DemoDomain;
 import com.bbubbush.demo.logic.repositories.DemoRepository;
 import com.bbubbush.demo.logic.service.DemoService;
+import com.bbubbush.demo.logic.validator.DemoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.Arrays;
 import java.util.Locale;
 
 @Component
-public class AppRunner {
+public class AppRunner implements ApplicationRunner{
     @Autowired
     DemoController controller;
     @Autowired
@@ -27,19 +32,27 @@ public class AppRunner {
     @Autowired
     MessageSource messageSource;
 
-    public void run(ApplicationArguments args) throws Exception {
-        System.out.println(controller);
-        System.out.println(service);
-        System.out.println(repository);
-        System.out.println(Arrays.toString(environment.getDefaultProfiles()));
-        System.out.println(Arrays.toString(environment.getActiveProfiles()));
-        System.out.println(environment.getProperty("hello"));
-        System.out.println(environment.getProperty("enviroment.scope"));
+    @Autowired
+    ApplicationContext context;
 
-        while(true) {
-            System.out.println(messageSource.getMessage("greeting", new String[]{"bbubbush"}, Locale.getDefault()));
-            System.out.println(messageSource.getMessage("greeting", new String[]{"bbubbush"}, Locale.ENGLISH));
-            Thread.sleep(3000);
-        }
+    public void run(ApplicationArguments args) throws Exception {
+//        System.out.println(controller);
+//        System.out.println(service);
+//        System.out.println(repository);
+//        System.out.println(Arrays.toString(environment.getDefaultProfiles()));
+//        System.out.println(Arrays.toString(environment.getActiveProfiles()));
+//        System.out.println(environment.getProperty("hello"));
+//        System.out.println(environment.getProperty("enviroment.scope"));
+        System.out.println(context.getClass());
+
+        final DemoDomain demoDomain = new DemoDomain();
+        final DemoValidator demoValidator = new DemoValidator();
+        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(demoDomain, "demoDomain");
+
+        demoValidator.validate(demoDomain, errors);
+
+        System.out.println(errors.hasErrors());
+
+
     }
 }
