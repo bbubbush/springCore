@@ -36,22 +36,31 @@ public class AppRunner implements ApplicationRunner{
     ApplicationContext context;
 
     public void run(ApplicationArguments args) throws Exception {
-//        System.out.println(controller);
-//        System.out.println(service);
-//        System.out.println(repository);
-//        System.out.println(Arrays.toString(environment.getDefaultProfiles()));
-//        System.out.println(Arrays.toString(environment.getActiveProfiles()));
-//        System.out.println(environment.getProperty("hello"));
-//        System.out.println(environment.getProperty("enviroment.scope"));
+        System.out.println(controller);
+        System.out.println(service);
+        System.out.println(repository);
+        System.out.println(Arrays.toString(environment.getDefaultProfiles()));
+        System.out.println(Arrays.toString(environment.getActiveProfiles()));
+        System.out.println(environment.getProperty("hello"));
+        System.out.println(environment.getProperty("enviroment.scope"));
         System.out.println(context.getClass());
 
         final DemoDomain demoDomain = new DemoDomain();
+//        demoDomain.setTitle("title");
         final DemoValidator demoValidator = new DemoValidator();
         final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(demoDomain, "demoDomain");
 
         demoValidator.validate(demoDomain, errors);
 
-        System.out.println(errors.hasErrors());
+        System.out.println("validator error is :: " + errors.hasErrors());
+        errors.getAllErrors().forEach(e->{
+            System.out.println("=======================");
+            Arrays.stream(e.getCodes()).forEach(System.out::println);
+            System.out.println(e.getDefaultMessage());
+        });
+        if (  errors.hasErrors() ) {
+            System.out.println(errors.getFieldError().getField());
+        }
 
 
     }
