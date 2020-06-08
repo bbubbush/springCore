@@ -17,6 +17,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.0.Final'
 }
 
 test {

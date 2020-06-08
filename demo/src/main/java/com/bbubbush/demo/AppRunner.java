@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -35,6 +36,9 @@ public class AppRunner implements ApplicationRunner{
     @Autowired
     ApplicationContext context;
 
+    @Autowired
+    Validator validator;
+
     public void run(ApplicationArguments args) throws Exception {
         System.out.println(controller);
         System.out.println(service);
@@ -45,21 +49,35 @@ public class AppRunner implements ApplicationRunner{
         System.out.println(environment.getProperty("enviroment.scope"));
         System.out.println(context.getClass());
 
-        final DemoDomain demoDomain = new DemoDomain();
-//        demoDomain.setTitle("title");
-        final DemoValidator demoValidator = new DemoValidator();
-        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(demoDomain, "demoDomain");
-
-        demoValidator.validate(demoDomain, errors);
-
-        System.out.println("validator error is :: " + errors.hasErrors());
-        errors.getAllErrors().forEach(e->{
+//        final DemoDomain demoDomain = new DemoDomain();
+////        demoDomain.setTitle("title");
+//        final DemoValidator demoValidator = new DemoValidator();
+//        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(demoDomain, "demoDomain");
+//
+//        demoValidator.validate(demoDomain, errors);
+//
+//        System.out.println("validator error is :: " + errors.hasErrors());
+//        errors.getAllErrors().forEach(e->{
+//            System.out.println("=======================");
+//            Arrays.stream(e.getCodes()).forEach(System.out::println);
+//            System.out.println(e.getDefaultMessage());
+//        });
+//        if (  errors.hasErrors() ) {
+//            System.out.println(errors.getFieldError().getField());
+//        }
+        System.out.println(validator.getClass());
+        final DemoDomain demoDomain2 = new DemoDomain();
+        demoDomain2.setId(-1L);
+        final BeanPropertyBindingResult errors2 = new BeanPropertyBindingResult(demoDomain2, "demoDomain2");
+        validator.validate(demoDomain2, errors2);
+        System.out.println("validator error is :: " + errors2.hasErrors());
+        errors2.getAllErrors().forEach(e->{
             System.out.println("=======================");
             Arrays.stream(e.getCodes()).forEach(System.out::println);
             System.out.println(e.getDefaultMessage());
         });
-        if (  errors.hasErrors() ) {
-            System.out.println(errors.getFieldError().getField());
+        if (  errors2.hasErrors() ) {
+            System.out.println(errors2.getFieldError().getField());
         }
 
 
